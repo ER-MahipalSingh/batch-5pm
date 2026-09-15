@@ -5,6 +5,7 @@ const Home = () => {
   const links = [
     { id: 1, pages: "Rest", path: "/rest" },
     { id: 2, pages: "Parent", path: "/parent" },
+    { id: 2, pages: "Hookes", path: "/hookes" },
   ];
   return (
     <div>
