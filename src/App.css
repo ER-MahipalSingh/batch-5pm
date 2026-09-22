@@ -1,0 +1,9 @@
+.home-btn {
+  color: white;
+  background: gray;
+}
+
+.home-btn:hover {
+  background: rgba(128, 128, 128, 0.504);
+  color: brown;
+}
