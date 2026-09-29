@@ -8,6 +8,8 @@ const Home = () => {
     { id: 2, pages: "Hookes", path: "/hookes" },
     { id: 2, pages: "Local", path: "/local" },
     { id: 2, pages: "Form", path: "/form" },
+    { id: 2, pages: "CallBack", path: "/callback" },
+    { id: 2, pages: "Memo", path: "/memo" },
   ];
   return (
     <div className="flex justify-center items-center gap-2 h-screen">

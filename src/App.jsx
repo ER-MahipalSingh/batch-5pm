@@ -7,6 +7,8 @@ import Hookes from "./features/pages/Test/Hookes";
 import Images from "./features/pages/Test/Images";
 import Local from "./features/pages/Test/Local";
 import Form from "./features/pages/Test/Form";
+import CallBackFun from "./features/pages/Test/CallBackFun";
+import Memo from "./features/pages/Test/Memo";
 
 function App() {
   return (
@@ -19,6 +21,8 @@ function App() {
         <Route path="/image" element={<Images />} />
         <Route path="/local" element={<Local />} />
         <Route path="/form" element={<Form />} />
+        <Route path="/callback" element={<CallBackFun />} />
+        <Route path="/memo" element={<Memo />} />
       </Routes>
     </BrowserRouter>
   );
