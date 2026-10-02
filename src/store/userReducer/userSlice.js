@@ -3,16 +3,16 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 export const login = createAsyncThunk(
   "users/login",
-  async ({ email, password }, thunkAPI) => {
+  async ({ username, password }, thunkAPI) => {
     try {
       const response = await axios.post(
-        "",
-        { email, password },
-        { headers: { "Content;type": "applican/json" } },
+        "https://dummyjson.com/auth/login",
+        { username, password },
+        { headers: { "Content-Type": "application/json" } },
       );
       return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(response.error.message || "Login faild");
+      return thunkAPI.rejectWithValue(error.response.message || "Login faild");
     }
   },
 );
@@ -33,19 +33,19 @@ const userSlice = createSlice({
     builder
     .addCase(login.pending, (state) => {
       state.loading = true;
-    }),
-    addCase(login.fulfilled, (state,action)=>{
+    },
+      addCase(login.fulfilled, (state, action) => {
         state.loading = false,
         state.isAuth = true,
-        state.users = action.payload,
-        state.message = action.payload
-    }),
-    addCase(login.rejected, (state, action)=>{
+          state.users = action.payload,
+          state.message = action.payload;
+      }),
+      addCase(login.rejected, (state, action) => {
         state.isAuth = false,
-        state.users = [],
-        state.message = action.payload
-        state.error = action.payload
-    })
+          state.users = [],
+          state.message = action.payload;
+        state.error = action.payload;
+      }));
   },
 });
 
