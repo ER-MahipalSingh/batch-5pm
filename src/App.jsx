@@ -10,6 +10,7 @@ import Form from "./features/pages/Test/Form";
 import CallBackFun from "./features/pages/Test/CallBackFun";
 import Memo from "./features/pages/Test/Memo";
 import Login from "./features/component/User/Login";
+import Products from "./features/pages/Test/Products";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <Route path="/callback" element={<CallBackFun />} />
         <Route path="/memo" element={<Memo />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/products" element={<Products />} />
       </Routes>
     </BrowserRouter>
   );

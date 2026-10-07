@@ -12,7 +12,9 @@ export const login = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.message || "Login faild");
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Login faild",
+      );
     }
   },
 );
@@ -22,30 +24,32 @@ const userSlice = createSlice({
   initialState: {
     loading: false,
     isAuth: false,
-    users: [],
+    users: null,
     message: null,
     error: null,
   },
 
-  reducer: () => {},
+  reducers: () => {},
 
-  extraReducer: (builder) => {
+  extraReducers: (builder) => {
     builder
-    .addCase(login.pending, (state) => {
-      state.loading = true;
-    },
-      addCase(login.fulfilled, (state, action) => {
-        state.loading = false,
-        state.isAuth = true,
-          state.users = action.payload,
-          state.message = action.payload;
-      }),
-      addCase(login.rejected, (state, action) => {
-        state.isAuth = false,
-          state.users = [],
-          state.message = action.payload;
+      .addCase(login.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(login.fulfilled, (state, action) => {
+        state.loading = false;
+        state.isAuth = true;
+        state.users = action.payload;
+        state.message = "Login successful";
+        state.error = null;
+      })
+      .addCase(login.rejected, (state, action) => {
+        state.loading = false;
+        state.isAuth = false;
+        state.users = null;
+        state.message = "Login failed";
         state.error = action.payload;
-      }));
+      });
   },
 });
 
