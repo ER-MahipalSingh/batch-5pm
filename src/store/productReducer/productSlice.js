@@ -17,11 +17,28 @@ export const allProducts = createAsyncThunk(
   },
 );
 
+export const productDetails = createAsyncThunk(
+  "products/singleProducts",
+  async ({ id }, thunkAPI) => {
+    try {
+      const response = await axios.get(`https://dummyjson.com/products/${id}`);
+      //   console.log(response.data);
+
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Product load failed",
+      );
+    }
+  },
+);
+
 const productSlice = createSlice({
   name: "products",
   initialState: {
     loading: false,
     getAllProducts: null,
+    singleProduct: null,
     message: null,
     error: null,
   },
@@ -36,12 +53,28 @@ const productSlice = createSlice({
       .addCase(allProducts.fulfilled, (state, action) => {
         state.loading = false;
         state.getAllProducts = action.payload;
-        state.message = "Login successful";
+        // state.message = "Login successful";
         state.error = null;
       })
       .addCase(allProducts.rejected, (state, action) => {
         state.loading = false;
         state.getAllProducts = null;
+        state.message = "Product load failed";
+        state.error = action.payload;
+      })
+
+      .addCase(productDetails.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(productDetails.fulfilled, (state, action) => {
+        state.loading = false;
+        state.singleProduct = action.payload;
+        // state.message = "Login successful";
+        state.error = null;
+      })
+      .addCase(productDetails.rejected, (state, action) => {
+        state.loading = false;
+        state.singleProduct = null;
         state.message = "Product load failed";
         state.error = action.payload;
       });
