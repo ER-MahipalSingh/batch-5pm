@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema(
   {
@@ -9,13 +9,13 @@ const userSchema = new mongoose.Schema(
     email: {
       type: String,
       required: [true, "Email is required"],
-      unique: True,
+      unique: true,
     },
     password: {
       type: String,
       required: [true, "Password is required"],
-      min: [6, "Password must be content atlist 6 char"],
-      max: [10, "Password should benot grater then 10 char"],
+      min: [true, 6, "Password must be content atlist 6 char"],
+      max: [true, 10, "Password should benot grater then 10 char"],
     },
   },
   { timestamps: true },
