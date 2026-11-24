@@ -46,8 +46,11 @@ exports.login = async (req, res) => {
     if (!comparePassword) {
       return res.status(400).json({ message: "Password invalid" });
     }
+
     user.password = undefined;
+
     const token = generateToken(user.id, res);
+
     return res.status(200).json({ message: "Login successful", user, token });
   } catch (error) {
     console.error("Error: ", error);
@@ -60,8 +63,8 @@ exports.login = async (req, res) => {
 
 exports.loadUser = async (req, res) => {
   try {
-    const id = req.params.id;
-    // const id = req.user.id;
+    // const id = req.params.id;
+    const id = req.user.id;
     const user = await User.findById(id);
     if (!user) {
       return res.status(400).json({ message: "User not found" });
@@ -74,5 +77,29 @@ exports.loadUser = async (req, res) => {
     return res
       .status(500)
       .json({ message: "Somthings went wrong while fetch user" });
+  }
+};
+
+exports.updateUser = async (req, res) => {
+  try {
+    const { name } = req.body;
+    if (!name) {
+      return res.status(400).json({ message: "All filed are required" });
+    }
+
+    const id = req.user.id;
+    const updateData = await User.findByIdAndUpdate(
+      id,
+      { name },
+      { new: true, runValidators: true },
+    );
+
+    return res
+      .status(201)
+      .json({ message: "User updated successfully", updateData });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Somthing went wrong while user updating" });
   }
 };

@@ -3,12 +3,13 @@ const { env } = require("./src/config/env");
 
 const { dbConnection } = require("./src/db/dbConnection");
 const userRoutes = require("./src/routes/userRoutes");
+const cookieParser = require("cookie-parser");
 
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
+app.use(cookieParser())
 
 app.get("/", (req, res) => {
   res.status(200).json({ message: "Server is working" });
