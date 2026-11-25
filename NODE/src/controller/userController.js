@@ -1,6 +1,7 @@
 const User = require("../model/userModel");
 const bcrypt = require("bcryptjs");
 const { generateToken } = require("../utils/generateToken");
+const OTP = require("../model/otpModel");
 
 exports.register = async (req, res) => {
   try {
@@ -101,5 +102,30 @@ exports.updateUser = async (req, res) => {
     return res
       .status(500)
       .json({ message: "Somthing went wrong while user updating" });
+  }
+};
+
+exports.sendOTPToMail = async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      return res.status(401).json({ message: "Email is required" });
+    }
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(401).json({ message: "User email not found" });
+    }
+
+    const otpGenerate = Math.floor(100000 + Math.random() * 999999).toString();
+    await OTP.findOneAndUpdate(
+      { email },
+      { email, opt: otpGenerate, date: Date.now() + 10 * 60 * 1000 },
+      { upsert: true },
+    );
+
+    return res.status(201).json({ message: "OTP has been sent", otpGenerate });
+  } catch (error) {
+    console.error("Error: ", error);
+    return res.status(500).json({ message: "OTP send faild" });
   }
 };
