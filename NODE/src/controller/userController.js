@@ -119,7 +119,7 @@ exports.sendOTPToMail = async (req, res) => {
     const otpGenerate = Math.floor(100000 + Math.random() * 999999).toString();
     await OTP.findOneAndUpdate(
       { email },
-      { email, opt: otpGenerate, date: Date.now() + 10 * 60 * 1000 },
+      { email, otp: otpGenerate, date: Date.now() + 10 * 24 * 1000 },
       { upsert: true },
     );
 
@@ -127,5 +127,45 @@ exports.sendOTPToMail = async (req, res) => {
   } catch (error) {
     console.error("Error: ", error);
     return res.status(500).json({ message: "OTP send faild" });
+  }
+};
+
+exports.verifyOTPandResetPassword = async (req, res) => {
+  try {
+    const { email, otp, password, confiramPassword } = req.body;
+    if (!email || !otp || !password || !confiramPassword) {
+      return res.status(401).json({ message: "All filed are required" });
+    }
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(401).json({ message: "User email not found" });
+    }
+
+    const otpCheck = await OTP.findOne({ email });
+    if (!otpCheck) {
+      return res.status(400).json({ message: "OTP not found" });
+    }
+    // console.log(otpCheck);
+
+    if (otpCheck.otp !== otp) {
+      return res.status(400).json({ message: "OTP not match" });
+    }
+
+    if (otpCheck.date < Date.now()) {
+      return res.status(400).json({ message: "Invalid OTP" });
+    }
+
+    if (password !== confiramPassword) {
+      return res.status(400).json({ message: "Password dose not match" });
+    }
+
+    const hasPassword = await bcrypt.hash(password, 10);
+    user.password = hasPassword;
+    user.save();
+    return res.status(200).json({ message: "Password reset done" });
+  } catch (error) {
+    console.error("Error: ", error);
+    return res.status(500).json({ message: "Password reset faild" });
   }
 };
